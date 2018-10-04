@@ -1,0 +1,18 @@
+<footer style='position:absolute; width:100%; background-color: grey; left: 0;'>
+  test test
+</footer>
+<script>
+  
+  function autoHeight() {
+    $('footer').css(
+      'top',
+      $(document).outerHeight() - $('footer').height()
+    );
+  }
+  $(document).ready(function() {
+      autoHeight();
+  });
+  $(window).resize(function() {
+      autoHeight();   
+  });
+</script>
