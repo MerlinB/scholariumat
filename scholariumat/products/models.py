@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 
 from django_extensions.db.models import TimeStampedModel, TitleDescriptionModel, TitleSlugDescriptionModel
+from s3upload.fields import S3UploadField
 
 from framework.behaviours import CommentAble
 from .behaviours import AttachmentBase
@@ -339,7 +340,7 @@ class AttachmentType(TitleSlugDescriptionModel):
 
 
 class FileAttachment(models.Model):
-    file = models.FileField()
+    file = S3UploadField(dest='default')
     type = models.ForeignKey('products.AttachmentType', on_delete=models.PROTECT)
 
     def get(self):
@@ -350,7 +351,7 @@ class FileAttachment(models.Model):
         return response
 
     def __str__(self):
-        return f'{self.type.__str__()}: {self.file.name}'
+        return f'{self.type.__str__()}: {self.file}'
 
     class Meta:
         verbose_name = 'Anhang'

@@ -36,14 +36,14 @@ def download_missing_files():
             attachment.file.open()
             attachment.file.close()
         except (FileNotFoundError, OSError):
-            local_path = os.path.join(local_dir.name, os.path.split(attachment.file.name)[1])
+            local_path = os.path.join(local_dir.name, os.path.split(attachment.file)[1])
 
             try:
-                scp.get(os.path.join('~/scholarium_daten/', attachment.file.name), local_path=local_dir.name)
+                scp.get(os.path.join('~/scholarium_daten/', attachment.file), local_path=local_dir.name)
             except SCPException as e:
                 logger.error(e)
                 # File doesn't exist, delete item, attachment
-                logger.error(f'Could not find file {attachment.file.name}. Deleting attachment.')
+                logger.error(f'Could not find file {attachment.file}. Deleting attachment.')
                 for item in attachment.item_set.all():
                     if len(item.files.all()) == 1:
                         logger.info(f'Deleted item {item}, as attachment is missing.')
@@ -51,9 +51,9 @@ def download_missing_files():
                 attachment.delete()
                 continue
             with open(local_path, 'rb') as local_file:
-                attachment.file = File(local_file, name=os.path.split(attachment.file.name)[1])
+                attachment.file = File(local_file, name=os.path.split(attachment.file)[1])
                 attachment.save()
-            logger.debug(f'Uploaded file {attachment.file.name}')
+            logger.debug(f'Uploaded file {attachment.file}')
     scp.close()
     ssh.close()
 
