@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.db import models
+from django.forms.widgets import TextInput
 
 from .models import Item, ItemType, Product, Purchase, FileAttachment, AttachmentType
 
@@ -63,9 +65,15 @@ class AttachmentAdmin(admin.ModelAdmin):
     raw_id_fields = ['item']
 
 
+class FileAttachmentAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.FileField: {'widget': TextInput}
+    }
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ItemType)
 admin.site.register(Purchase, PurchaseAdmin)
 admin.site.register(Item, ItemAdmin)
-admin.site.register(FileAttachment)
+admin.site.register(FileAttachment, FileAttachmentAdmin)
 admin.site.register(AttachmentType)
